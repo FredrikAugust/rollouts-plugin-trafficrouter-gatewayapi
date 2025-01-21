@@ -10,7 +10,7 @@ import (
 	"github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	pluginTypes "github.com/argoproj/argo-rollouts/utils/plugin/types"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1alpha2"
 )
 
 const (
@@ -21,7 +21,7 @@ func (r *RpcPlugin) setGRPCRouteWeight(rollout *v1alpha1.Rollout, desiredWeight 
 	ctx := context.TODO()
 	grpcRouteClient := r.GRPCRouteClient
 	if !r.IsTest {
-		gatewayClientv1 := r.GatewayAPIClientset.GatewayV1()
+		gatewayClientv1 := r.GatewayAPIClientset.GatewayV1alpha2()
 		grpcRouteClient = gatewayClientv1.GRPCRoutes(gatewayAPIConfig.Namespace)
 	}
 	grpcRoute, err := grpcRouteClient.Get(ctx, gatewayAPIConfig.GRPCRoute, metav1.GetOptions{})
@@ -79,7 +79,7 @@ func (r *RpcPlugin) setGRPCHeaderRoute(rollout *v1alpha1.Rollout, headerRouting 
 	grpcRouteName := gatewayAPIConfig.GRPCRoute
 	clientset := r.TestClientset
 	if !r.IsTest {
-		gatewayClientV1 := r.GatewayAPIClientset.GatewayV1()
+		gatewayClientV1 := r.GatewayAPIClientset.GatewayV1alpha2()
 		grpcRouteClient = gatewayClientV1.GRPCRoutes(gatewayAPIConfig.Namespace)
 		clientset = r.Clientset.CoreV1().ConfigMaps(gatewayAPIConfig.Namespace)
 	}
@@ -238,15 +238,15 @@ func getGRPCHeaderRouteRuleList(headerRouting *v1alpha1.SetHeaderRoute) ([]gatew
 		}
 		switch {
 		case headerRule.HeaderValue.Exact != "":
-			headerMatchType := gatewayv1.HeaderMatchExact
+			headerMatchType := gatewayv1.HeaderMatchType(headerRule.HeaderValue.Exact)
 			grpcHeaderRouteRule.Type = &headerMatchType
 			grpcHeaderRouteRule.Value = headerRule.HeaderValue.Exact
 		case headerRule.HeaderValue.Prefix != "":
-			headerMatchType := gatewayv1.HeaderMatchRegularExpression
+			headerMatchType := gatewayv1.HeaderMatchType(headerRule.HeaderValue.Exact)
 			grpcHeaderRouteRule.Type = &headerMatchType
 			grpcHeaderRouteRule.Value = headerRule.HeaderValue.Prefix + ".*"
 		case headerRule.HeaderValue.Regex != "":
-			headerMatchType := gatewayv1.HeaderMatchRegularExpression
+			headerMatchType := gatewayv1.HeaderMatchType(headerRule.HeaderValue.Exact)
 			grpcHeaderRouteRule.Type = &headerMatchType
 			grpcHeaderRouteRule.Value = headerRule.HeaderValue.Regex
 		default:
@@ -266,7 +266,7 @@ func (r *RpcPlugin) removeGRPCManagedRoutes(managedRouteNameList []v1alpha1.Mang
 	grpcRouteName := gatewayAPIConfig.GRPCRoute
 	managedRouteMap := make(ManagedRouteMap)
 	if !r.IsTest {
-		gatewayClientv1 := r.GatewayAPIClientset.GatewayV1()
+		gatewayClientv1 := r.GatewayAPIClientset.GatewayV1alpha2()
 		grpcRouteClient = gatewayClientv1.GRPCRoutes(gatewayAPIConfig.Namespace)
 		clientset = r.Clientset.CoreV1().ConfigMaps(gatewayAPIConfig.Namespace)
 	}

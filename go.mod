@@ -12,7 +12,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	k8s.io/client-go v0.30.1
 	sigs.k8s.io/e2e-framework v0.4.0
-	sigs.k8s.io/gateway-api v1.1.0
+	sigs.k8s.io/gateway-api v0.7.1
 )
 
 require (

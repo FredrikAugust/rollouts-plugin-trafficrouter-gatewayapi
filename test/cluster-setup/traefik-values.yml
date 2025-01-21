@@ -1,6 +1,6 @@
 experimental:
   kubernetesGateway:
-    enabled: true
+    enabled: false
 
 providers:
   kubernetesCRD:

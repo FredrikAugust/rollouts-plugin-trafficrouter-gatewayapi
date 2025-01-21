@@ -1,16 +1,17 @@
 package plugin
 
 import (
+	"sigs.k8s.io/gateway-api/apis/v1beta1"
 	"sync"
 
 	"github.com/sirupsen/logrus"
 	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/core/v1"
-	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
 	"sigs.k8s.io/gateway-api/apis/v1alpha2"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1alpha2"
 	gatewayAPIClientset "sigs.k8s.io/gateway-api/pkg/client/clientset/versioned"
-	gatewayApiClientv1 "sigs.k8s.io/gateway-api/pkg/client/clientset/versioned/typed/apis/v1"
 	gatewayApiClientv1alpha2 "sigs.k8s.io/gateway-api/pkg/client/clientset/versioned/typed/apis/v1alpha2"
+	gatewayApiClientv1beta1 "sigs.k8s.io/gateway-api/pkg/client/clientset/versioned/typed/apis/v1beta1"
 )
 
 type CommandLineOpts struct {
@@ -20,15 +21,15 @@ type CommandLineOpts struct {
 
 type RpcPlugin struct {
 	CommandLineOpts      CommandLineOpts
-	HTTPRouteClient      gatewayApiClientv1.HTTPRouteInterface
+	HTTPRouteClient      gatewayApiClientv1beta1.HTTPRouteInterface
 	TCPRouteClient       gatewayApiClientv1alpha2.TCPRouteInterface
-	GRPCRouteClient      gatewayApiClientv1.GRPCRouteInterface
+	GRPCRouteClient      gatewayApiClientv1alpha2.GRPCRouteInterface
 	TestClientset        v1.ConfigMapInterface
 	GatewayAPIClientset  *gatewayAPIClientset.Clientset
 	Clientset            *kubernetes.Clientset
-	UpdatedHTTPRouteMock *gatewayv1.HTTPRoute
+	UpdatedHTTPRouteMock *v1beta1.HTTPRoute
 	UpdatedTCPRouteMock  *v1alpha2.TCPRoute
-	UpdatedGRPCRouteMock *gatewayv1.GRPCRoute
+	UpdatedGRPCRouteMock *v1alpha2.GRPCRoute
 	LogCtx               *logrus.Entry
 	IsTest               bool
 }

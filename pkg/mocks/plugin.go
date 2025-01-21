@@ -6,7 +6,8 @@ import (
 
 	"sigs.k8s.io/gateway-api/apis/v1alpha2"
 
-	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
+	gatewayv1alpha2 "sigs.k8s.io/gateway-api/apis/v1alpha2"
+	gatewayv1beta1 "sigs.k8s.io/gateway-api/apis/v1beta1"
 )
 
 const (
@@ -23,28 +24,28 @@ const (
 )
 
 var (
-	port                     = gatewayv1.PortNumber(80)
+	port                     = gatewayv1beta1.PortNumber(80)
 	weight             int32 = 0
-	httpPathMatchType        = gatewayv1.PathMatchPathPrefix
+	httpPathMatchType        = gatewayv1beta1.PathMatchPathPrefix
 	httpPathMatchValue       = "/"
-	httpPathMatch            = gatewayv1.HTTPPathMatch{
+	httpPathMatch            = gatewayv1beta1.HTTPPathMatch{
 		Type:  &httpPathMatchType,
 		Value: &httpPathMatchValue,
 	}
 )
 
-var HTTPRouteObj = gatewayv1.HTTPRoute{
+var HTTPRouteObj = gatewayv1beta1.HTTPRoute{
 	ObjectMeta: metav1.ObjectMeta{
 		Name:      HTTPRouteName,
 		Namespace: RolloutNamespace,
 	},
-	Spec: gatewayv1.HTTPRouteSpec{
-		Rules: []gatewayv1.HTTPRouteRule{
+	Spec: gatewayv1beta1.HTTPRouteSpec{
+		Rules: []gatewayv1beta1.HTTPRouteRule{
 			{
-				BackendRefs: []gatewayv1.HTTPBackendRef{
+				BackendRefs: []gatewayv1beta1.HTTPBackendRef{
 					{
-						BackendRef: gatewayv1.BackendRef{
-							BackendObjectReference: gatewayv1.BackendObjectReference{
+						BackendRef: gatewayv1beta1.BackendRef{
+							BackendObjectReference: gatewayv1beta1.BackendObjectReference{
 								Name: StableServiceName,
 								Port: &port,
 							},
@@ -52,8 +53,8 @@ var HTTPRouteObj = gatewayv1.HTTPRoute{
 						},
 					},
 					{
-						BackendRef: gatewayv1.BackendRef{
-							BackendObjectReference: gatewayv1.BackendObjectReference{
+						BackendRef: gatewayv1beta1.BackendRef{
+							BackendObjectReference: gatewayv1beta1.BackendObjectReference{
 								Name: CanaryServiceName,
 								Port: &port,
 							},
@@ -61,7 +62,7 @@ var HTTPRouteObj = gatewayv1.HTTPRoute{
 						},
 					},
 				},
-				Matches: []gatewayv1.HTTPRouteMatch{
+				Matches: []gatewayv1beta1.HTTPRouteMatch{
 					{
 						Path: &httpPathMatch,
 					},
@@ -71,18 +72,18 @@ var HTTPRouteObj = gatewayv1.HTTPRoute{
 	},
 }
 
-var GRPCRouteObj = gatewayv1.GRPCRoute{
+var GRPCRouteObj = gatewayv1alpha2.GRPCRoute{
 	ObjectMeta: metav1.ObjectMeta{
 		Name:      GRPCRouteName,
 		Namespace: RolloutNamespace,
 	},
-	Spec: gatewayv1.GRPCRouteSpec{
-		Rules: []gatewayv1.GRPCRouteRule{
+	Spec: gatewayv1alpha2.GRPCRouteSpec{
+		Rules: []gatewayv1alpha2.GRPCRouteRule{
 			{
-				BackendRefs: []gatewayv1.GRPCBackendRef{
+				BackendRefs: []gatewayv1alpha2.GRPCBackendRef{
 					{
-						BackendRef: gatewayv1.BackendRef{
-							BackendObjectReference: gatewayv1.BackendObjectReference{
+						BackendRef: gatewayv1alpha2.BackendRef{
+							BackendObjectReference: gatewayv1alpha2.BackendObjectReference{
 								Name: StableServiceName,
 								Port: &port,
 							},
@@ -90,8 +91,8 @@ var GRPCRouteObj = gatewayv1.GRPCRoute{
 						},
 					},
 					{
-						BackendRef: gatewayv1.BackendRef{
-							BackendObjectReference: gatewayv1.BackendObjectReference{
+						BackendRef: gatewayv1alpha2.BackendRef{
+							BackendObjectReference: gatewayv1alpha2.BackendObjectReference{
 								Name: CanaryServiceName,
 								Port: &port,
 							},

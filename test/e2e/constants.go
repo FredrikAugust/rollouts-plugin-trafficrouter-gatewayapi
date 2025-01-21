@@ -3,7 +3,7 @@ package e2e
 import (
 	"time"
 
-	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1"
+	gatewayv1 "sigs.k8s.io/gateway-api/apis/v1alpha2"
 )
 
 const (
@@ -50,7 +50,7 @@ const (
 
 var (
 	FIRST_HEADER_BASED_HTTP_ROUTE_VALUE gatewayv1.HTTPHeaderMatch
-	headerBasedHTTPRouteValueType       = gatewayv1.HeaderMatchExact
+	headerBasedHTTPRouteValueType       = gatewayv1.HeaderMatchType("exact")
 	LAST_HEADER_BASED_HTTP_ROUTE_VALUE  = gatewayv1.HTTPHeaderMatch{
 		Name:  "X-Test",
 		Type:  &headerBasedHTTPRouteValueType,
@@ -58,7 +58,7 @@ var (
 	}
 
 	FIRST_HEADER_BASED_GRPC_ROUTE_VALUE gatewayv1.GRPCHeaderMatch
-	headerBasedGRPCRouteValueType       = gatewayv1.HeaderMatchExact
+	headerBasedGRPCRouteValueType       = gatewayv1.HeaderMatchType("exact")
 	LAST_HEADER_BASED_GRPC_ROUTE_VALUE  = gatewayv1.GRPCHeaderMatch{
 		Name:  "X-Test",
 		Type:  &headerBasedGRPCRouteValueType,
